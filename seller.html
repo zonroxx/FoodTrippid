@@ -1,0 +1,524 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Seller Dashboard - FoodTrippid PH</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand:'#FF6B00',brandDark:'#CC5500',brandLight:'#FF8C3A',
+        surface:'#141414',card:'#1C1C1C',cardHover:'#242424',
+        border:'#2A2A2A',muted:'#5A5A5A',subtle:'#3A3A3A',
+        textPrimary:'#F0F0F0',textSecondary:'#9A9A9A',
+      },
+      fontFamily:{ display:['Syne','sans-serif'], body:['DM Sans','sans-serif'] }
+    }
+  }
+}
+</script>
+<link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body class="bg-surface">
+
+<div id="toast"></div>
+
+<!-- DONATE MODAL -->
+<div id="donate-modal" onclick="closeDonateModal(event)">
+  <div style="background:#1C1C1C;width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:24px;animation:slideUp 0.3s ease">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-display text-lg font-bold text-textPrimary">
+        <i class="fa fa-heart text-green-400 mr-2"></i>Donate Food Item
+      </h3>
+      <button onclick="closeDonateModal()" class="w-8 h-8 rounded-full bg-subtle flex items-center justify-center text-textSecondary">
+        <i class="fa fa-xmark text-sm"></i>
+      </button>
+    </div>
+    <div class="bg-green-950/30 border border-green-800/40 rounded-xl p-4 mb-5 flex gap-3">
+      <i class="fa fa-circle-info text-green-400 mt-0.5"></i>
+      <p class="text-sm text-green-300">Your donation will be listed as FREE and matched to nearby community members in need. Thank you for giving back!</p>
+    </div>
+    <div class="space-y-3 mb-5">
+      <div>
+        <label class="text-xs text-textSecondary mb-1 block">Food Item Name</label>
+        <input type="text" placeholder="e.g. Leftover Pandesal (12 pcs)" class="w-full rounded-xl px-4 py-3 text-sm"/>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs text-textSecondary mb-1 block">Quantity</label>
+          <input type="text" placeholder="e.g. 1 tray" class="w-full rounded-xl px-4 py-3 text-sm"/>
+        </div>
+        <div>
+          <label class="text-xs text-textSecondary mb-1 block">Best Before</label>
+          <input type="text" placeholder="Today / Tomorrow" class="w-full rounded-xl px-4 py-3 text-sm"/>
+        </div>
+      </div>
+      <div>
+        <label class="text-xs text-textSecondary mb-1 block">Pickup Location</label>
+        <input type="text" placeholder="Barangay / Area" class="w-full rounded-xl px-4 py-3 text-sm"/>
+      </div>
+    </div>
+    <button onclick="closeDonateModal();showToast('<i class=\'fa fa-check mr-1\'></i> Donation listed! 💚')"
+      class="btn-primary w-full py-4 rounded-2xl font-display font-bold text-white text-sm">
+      <i class="fa fa-hand-holding-heart mr-2"></i>List as FREE Donation
+    </button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="flex items-center gap-2 mb-1">
+        <i class="fa fa-location-dot text-brand text-xs"></i>
+        <span class="text-xs text-textSecondary">Manila City</span>
+      </div>
+      <h1 class="font-display text-xl font-bold text-textPrimary leading-tight">FoodTrippid <span class="text-brand">PH</span></h1>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="sidebar-nav-link" data-page="home"><i class="fa fa-house"></i><span>Home</span></a>
+      <a href="search.html" class="sidebar-nav-link" data-page="search"><i class="fa fa-magnifying-glass"></i><span>Search</span></a>
+      <a href="map.html" class="sidebar-nav-link" data-page="map"><i class="fa fa-map-location-dot"></i><span>Map</span></a>
+      <a href="bag.html" class="sidebar-nav-link" data-page="bag">
+        <i class="fa fa-bag-shopping"></i><span>My Basket</span>
+        <span id="sidebar-bag-badge" class="sidebar-link-badge">0</span>
+      </a>
+      <a href="profile.html" class="sidebar-nav-link" data-page="profile"><i class="fa fa-user"></i><span>Profile</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="seller.html" style="text-decoration:none" class="btn-primary flex items-center justify-center gap-2 py-3 rounded-xl text-white text-sm font-display font-bold">
+        <i class="fa fa-store"></i> Sell Food
+      </a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <!-- HEADER -->
+    <div class="sticky-header px-5 pt-5 pb-4">
+      <div class="page-container px-0 flex items-center gap-3">
+        <a href="index.html" class="w-9 h-9 rounded-xl bg-card border border-border flex items-center justify-center text-textSecondary hover:text-brand transition-colors" style="text-decoration:none">
+          <i class="fa fa-arrow-left text-sm"></i>
+        </a>
+        <div class="flex-1">
+          <h2 class="font-display font-bold text-base text-textPrimary">Seller Dashboard</h2>
+          <p class="text-xs text-textSecondary"><i class="fa fa-store mr-1"></i>Mang Kiko's Karinderya</p>
+        </div>
+        <div class="flex items-center gap-1.5 seller-verified text-xs px-2 py-1 rounded-full">
+          <i class="fa fa-circle-check text-xs"></i> Verified
+        </div>
+      </div>
+    </div>
+
+    <div class="page-container py-4">
+
+      <!-- STATS GRID -->
+      <div class="grid grid-cols-2 gap-3 stats-grid">
+        <div class="bg-card rounded-2xl p-4 border border-border">
+          <p class="text-xs text-textSecondary mb-1"><i class="fa fa-list-check mr-1"></i>Items Listed</p>
+          <p class="font-display font-bold text-2xl text-textPrimary">12</p>
+          <p class="text-xs text-green-400 mt-1"><i class="fa fa-arrow-up mr-1"></i>3 new today</p>
+        </div>
+        <div class="bg-card rounded-2xl p-4 border border-border">
+          <p class="text-xs text-textSecondary mb-1"><i class="fa fa-peso-sign mr-1"></i>Total Earned</p>
+          <p class="font-display font-bold text-2xl text-brand">₱4,280</p>
+          <p class="text-xs text-textSecondary mt-1">this month</p>
+        </div>
+        <div class="bg-card rounded-2xl p-4 border border-border">
+          <p class="text-xs text-textSecondary mb-1"><i class="fa fa-scale-balanced mr-1"></i>Food Rescued</p>
+          <p class="font-display font-bold text-2xl text-textPrimary">38<span class="text-sm font-normal text-textSecondary"> kg</span></p>
+          <p class="text-xs text-green-400 mt-1"><i class="fa fa-leaf mr-1"></i>Great job!</p>
+        </div>
+        <div class="bg-card rounded-2xl p-4 border border-border">
+          <p class="text-xs text-textSecondary mb-1"><i class="fa fa-recycle mr-1"></i>Waste Reduced</p>
+          <p class="font-display font-bold text-2xl text-textPrimary">72<span class="text-sm font-normal text-textSecondary">%</span></p>
+          <div class="progress-bar mt-2"><div class="progress-fill" style="width:72%"></div></div>
+        </div>
+      </div>
+
+      <!-- ACTIVE LISTINGS -->
+      <div class="mt-6">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-display font-bold text-sm text-textPrimary">
+            <i class="fa fa-store text-brand mr-1.5"></i>Active Listings
+          </h3>
+          <button onclick="showUploadForm()" class="btn-primary px-3 py-1.5 rounded-xl text-white text-xs font-medium flex items-center gap-1.5">
+            <i class="fa fa-plus text-xs"></i>Upload
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <!-- Listing 1 -->
+          <div class="bg-card rounded-2xl p-3 border border-border">
+            <div class="flex gap-3">
+              <img src="images/placeholderFood.png" class="w-16 h-16 rounded-xl flex-none object-cover" alt="food">
+              <div class="flex-1">
+                <div class="flex items-start justify-between">
+                  <p class="font-display font-bold text-sm text-textPrimary">Lechon Kawali Ala Carte</p>
+                  <span class="tag-expiry text-xs px-1.5 py-0.5 rounded-full ml-1 whitespace-nowrap">
+                    <i class="fa fa-clock mr-1"></i>Today 5PM
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-brand font-bold text-sm">₱80</span>
+                  <span class="price-original text-xs">₱150</span>
+                  <span class="text-xs text-textSecondary"><i class="fa fa-boxes-stacked mr-0.5"></i>3 units left</span>
+                </div>
+              </div>
+            </div>
+            <!-- Dynamic pricing status (read-only) -->
+            <div class="mt-3 rounded-xl p-3" style="background:rgba(58,58,58,0.3)">
+              <div class="flex justify-between text-xs mb-1.5">
+                <span class="text-textSecondary"><i class="fa fa-chart-line text-brand mr-1"></i>Started at <span class="text-textPrimary font-medium">₱150</span></span>
+                <span class="text-textSecondary">Floor <span class="text-orange-300 font-medium">₱80</span></span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:53%"></div></div>
+              <div class="flex justify-between text-xs text-muted mt-1.5">
+                <span>12:00 PM</span>
+                <span class="text-brand font-medium">Now: ₱80</span>
+                <span>5:00 PM</span>
+              </div>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button class="flex-1 py-2 rounded-xl border border-border text-textSecondary text-xs hover:border-brand hover:text-brand transition-colors">
+                <i class="fa fa-pen-to-square mr-1"></i>Edit
+              </button>
+              <button onclick="showDonateModal()" class="flex-1 py-2 rounded-xl border border-green-800/50 text-green-400 text-xs hover:bg-green-900/20 transition-colors">
+                <i class="fa fa-hand-holding-heart mr-1"></i>Donate Remaining
+              </button>
+            </div>
+          </div>
+
+          <!-- Listing 2 -->
+          <div class="bg-card rounded-2xl p-3 border border-border">
+            <div class="flex gap-3">
+              <img src="images/placeholderFood.png" class="w-16 h-16 rounded-xl flex-none object-cover" alt="food">
+              <div class="flex-1">
+                <div class="flex items-start justify-between">
+                  <p class="font-display font-bold text-sm text-textPrimary">Sinigang Mix Meal Set</p>
+                  <span class="tag-expiry text-xs px-1.5 py-0.5 rounded-full ml-1 whitespace-nowrap">
+                    <i class="fa fa-clock mr-1"></i>Today 6PM
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-brand font-bold text-sm">₱65</span>
+                  <span class="price-original text-xs">₱120</span>
+                  <span class="text-xs text-textSecondary"><i class="fa fa-boxes-stacked mr-0.5"></i>5 units left</span>
+                </div>
+              </div>
+            </div>
+            <!-- Fixed price status (read-only) -->
+            <div class="mt-3 rounded-xl p-3" style="background:rgba(58,58,58,0.3)">
+              <p class="text-xs text-muted"><i class="fa fa-tag mr-1 text-brand"></i>Fixed price - <span class="text-textPrimary font-medium">₱65</span></p>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button class="flex-1 py-2 rounded-xl border border-border text-textSecondary text-xs hover:border-brand hover:text-brand transition-colors">
+                <i class="fa fa-pen-to-square mr-1"></i>Edit
+              </button>
+              <button onclick="showDonateModal()" class="flex-1 py-2 rounded-xl border border-green-800/50 text-green-400 text-xs hover:bg-green-900/20 transition-colors">
+                <i class="fa fa-hand-holding-heart mr-1"></i>Donate Remaining
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPLOAD FORM -->
+      <div id="upload-form" class="hidden mt-5">
+        <div class="bg-card rounded-2xl p-4 border border-brand/30">
+          <h3 class="font-display font-bold text-sm text-textPrimary mb-4">
+            <i class="fa fa-box-open text-brand mr-1.5"></i>Upload New Listing
+          </h3>
+          <div class="space-y-3">
+
+            <!-- Photo Upload -->
+            <div>
+              <label class="text-xs text-textSecondary mb-1 block">Food Photo</label>
+              <label id="img-upload-label" for="img-upload" class="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border cursor-pointer transition-colors hover:border-brand/50" style="height:140px;background:rgba(28,28,28,0.6)">
+                <div id="img-preview-wrap" class="hidden w-full h-full relative">
+                  <img id="img-preview" src="" alt="preview" class="w-full h-full object-cover rounded-2xl"/>
+                  <button type="button" onclick="clearImage(event)" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-surface/80 flex items-center justify-center text-textSecondary hover:text-red-400 transition-colors">
+                    <i class="fa fa-xmark text-xs"></i>
+                  </button>
+                </div>
+                <div id="img-placeholder" class="flex flex-col items-center gap-2">
+                  <div class="w-10 h-10 rounded-xl bg-subtle flex items-center justify-center">
+                    <i class="fa fa-camera text-muted text-lg"></i>
+                  </div>
+                  <p class="text-xs text-textSecondary">Tap to upload a photo</p>
+                  <p class="text-xs text-muted">JPG, PNG up to 5MB</p>
+                </div>
+              </label>
+              <input type="file" id="img-upload" accept="image/*" class="hidden" onchange="previewImage(this)"/>
+            </div>
+
+            <!-- Food Name -->
+            <div>
+              <label class="text-xs text-textSecondary mb-1 block">Food Name</label>
+              <input type="text" placeholder="e.g. Adobo with Rice" class="w-full rounded-xl px-4 py-3 text-sm"/>
+            </div>
+
+            <!-- Original price + qty -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-xs text-textSecondary mb-1 block">Original Price <span class="text-muted">(retail)</span></label>
+                <input type="number" min="0" placeholder="₱ 0" class="w-full rounded-xl px-4 py-3 text-sm" id="f-orig"/>
+              </div>
+              <div>
+                <label class="text-xs text-textSecondary mb-1 block">Quantity Available</label>
+                <input type="number" min="1" placeholder="e.g. 5" class="w-full rounded-xl px-4 py-3 text-sm"/>
+              </div>
+            </div>
+
+            <!-- Category -->
+            <div>
+              <label class="text-xs text-textSecondary mb-1 block">Category</label>
+              <div class="scroll-x pb-1 mt-1">
+                <button class="cat-pill active rounded-full px-3 py-1.5 text-xs font-medium whitespace-nowrap flex items-center gap-1.5" onclick="selectCat(this)"><i class="fa fa-fire-flame-curved text-xs"></i> Karinderya</button>
+                <button class="cat-pill rounded-full px-3 py-1.5 text-xs font-medium whitespace-nowrap flex items-center gap-1.5" onclick="selectCat(this)"><i class="fa fa-bread-slice text-xs"></i> Bakery</button>
+                <button class="cat-pill rounded-full px-3 py-1.5 text-xs font-medium whitespace-nowrap flex items-center gap-1.5" onclick="selectCat(this)"><i class="fa fa-utensils text-xs"></i> Restaurant</button>
+                <button class="cat-pill rounded-full px-3 py-1.5 text-xs font-medium whitespace-nowrap flex items-center gap-1.5" onclick="selectCat(this)"><i class="fa fa-house text-xs"></i> Homemade</button>
+                <button class="cat-pill rounded-full px-3 py-1.5 text-xs font-medium whitespace-nowrap flex items-center gap-1.5" onclick="selectCat(this)"><i class="fa fa-cart-shopping text-xs"></i> Supermarket</button>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label class="text-xs text-textSecondary mb-1 block">Description</label>
+              <input type="text" placeholder="Briefly describe the food item" class="w-full rounded-xl px-4 py-3 text-sm"/>
+            </div>
+
+            <!-- Dynamic Pricing toggle -->
+            <div class="rounded-xl px-4 py-3" style="background:rgba(58,58,58,0.3)">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-textPrimary font-medium"><i class="fa fa-chart-line text-brand mr-1.5"></i>Dynamic Pricing</p>
+                  <p class="text-xs text-textSecondary mt-0.5">Price drops gradually from start price to floor price</p>
+                </div>
+                <label class="toggle-switch"><input type="checkbox" id="dyn-toggle" checked onchange="toggleDynFields()"><span class="toggle-slider"></span></label>
+              </div>
+
+              <!-- Dynamic fields -->
+              <div id="dyn-fields" class="mt-3 space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="text-xs text-textSecondary mb-1 block"><i class="fa fa-tag mr-1"></i>Starting Sale Price</label>
+                    <input type="number" min="0" placeholder="₱ 0" class="w-full rounded-xl px-4 py-3 text-sm" id="f-start" oninput="updatePreview()"/>
+                  </div>
+                  <div>
+                    <label class="text-xs text-textSecondary mb-1 block"><i class="fa fa-arrow-down mr-1"></i>Floor Price</label>
+                    <input type="number" min="0" placeholder="₱ 0" class="w-full rounded-xl px-4 py-3 text-sm" id="f-floor" oninput="updatePreview()"/>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="text-xs text-textSecondary mb-1 block"><i class="fa fa-play mr-1"></i>Sale Starts</label>
+                    <input type="time" class="w-full rounded-xl px-4 py-3 text-sm" id="f-start-time" oninput="updatePreview()"/>
+                  </div>
+                  <div>
+                    <label class="text-xs text-textSecondary mb-1 block"><i class="fa fa-flag-checkered mr-1"></i>Sale Ends</label>
+                    <input type="time" class="w-full rounded-xl px-4 py-3 text-sm" id="f-end-time" oninput="updatePreview()"/>
+                  </div>
+                </div>
+
+                <!-- Live preview -->
+                <div id="price-preview" class="rounded-xl p-3 border border-border" style="display:none">
+                  <p class="text-xs text-textSecondary font-medium mb-2"><i class="fa fa-eye mr-1"></i>Price Drop Preview</p>
+                  <div class="flex justify-between text-xs mb-1.5">
+                    <span class="text-textPrimary font-medium" id="prev-start">-</span>
+                    <span class="text-brand font-bold" id="prev-now">-</span>
+                    <span class="text-orange-300 font-medium" id="prev-floor">-</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" id="prev-bar" style="width:0%"></div>
+                  </div>
+                  <div class="flex justify-between text-xs text-muted mt-1.5">
+                    <span id="prev-t-start">-</span>
+                    <span id="prev-t-end">-</span>
+                  </div>
+                  <p class="text-xs text-muted mt-2"><i class="fa fa-circle-info mr-1"></i>Buyers see the current price in real time as it drops</p>
+                </div>
+              </div>
+
+              <!-- Static price (dynamic OFF) -->
+              <div id="static-fields" class="mt-3 hidden">
+                <label class="text-xs text-textSecondary mb-1 block">Sale Price</label>
+                <input type="number" min="0" placeholder="₱ 0" class="w-full rounded-xl px-4 py-3 text-sm"/>
+              </div>
+            </div>
+
+            <!-- Donation toggle -->
+            <div class="flex items-center justify-between bg-green-950/30 border border-green-800/40 rounded-xl px-4 py-3">
+              <div>
+                <p class="text-sm text-green-300 font-medium"><i class="fa fa-heart mr-1.5"></i>List as Donation (FREE)</p>
+                <p class="text-xs text-green-500 mt-0.5">Contribute to community</p>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="donate-toggle" onchange="toggleDonationMode(this)"><span class="toggle-slider"></span></label>
+            </div>
+
+          </div>
+          <div class="flex gap-3 mt-4">
+            <button onclick="hideUploadForm()" class="flex-1 py-3 rounded-2xl border border-border text-textSecondary text-sm font-medium">
+              <i class="fa fa-xmark mr-1"></i>Cancel
+            </button>
+            <button onclick="submitListing()" class="btn-primary flex-1 py-3 rounded-2xl text-white font-display font-bold text-sm">
+              <i class="fa fa-upload mr-1"></i>List Item
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK DONATE BANNER -->
+      <div class="mt-4 mb-4 bg-green-950/30 border border-green-800/40 rounded-2xl p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-green-900/40 flex items-center justify-center flex-none">
+          <i class="fa fa-hand-holding-heart text-xl text-green-400"></i>
+        </div>
+        <div class="flex-1">
+          <p class="font-display font-bold text-sm text-green-300">Have surplus you can't sell?</p>
+          <p class="text-xs text-green-600 mt-0.5">Donate it free to your community</p>
+        </div>
+        <button onclick="showDonateModal()" class="bg-green-900/50 border border-green-700/50 text-green-400 text-xs px-3 py-2 rounded-xl font-medium whitespace-nowrap hover:bg-green-800/50 transition-colors">
+          <i class="fa fa-heart mr-1"></i>Donate
+        </button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item" data-page="home" onclick="location.href='index.html'">
+    <i class="nav-icon fa fa-house"></i><span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="search" onclick="location.href='search.html'">
+    <i class="nav-icon fa fa-magnifying-glass"></i><span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="map" onclick="location.href='map.html'">
+    <i class="nav-icon fa fa-map"></i><span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="bag" onclick="location.href='bag.html'" style="position:relative">
+    <i class="nav-icon fa fa-bag-shopping"></i>
+    <span id="nav-bag-badge" class="nav-badge">0</span>
+    <span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="profile" onclick="location.href='profile.html'">
+    <i class="nav-icon fa fa-user"></i><span class="nav-dot"></span>
+  </button>
+</nav>
+
+<script src="js/app.js"></script>
+<script>
+function showUploadForm() {
+  const f = document.getElementById('upload-form');
+  f.classList.toggle('hidden');
+  if (!f.classList.contains('hidden')) f.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function hideUploadForm() { document.getElementById('upload-form').classList.add('hidden'); }
+function submitListing() {
+  hideUploadForm();
+  showToast('<i class="fa fa-check mr-1"></i> New listing published!');
+}
+function toggleDynamic(el) {
+  showToast(el.checked
+    ? '<i class="fa fa-chart-line mr-1"></i> Dynamic pricing enabled'
+    : '<i class="fa fa-lock mr-1"></i> Dynamic pricing disabled');
+}
+
+function toggleDynFields() {
+  const on = document.getElementById('dyn-toggle').checked;
+  if (on) {
+    // Turn off donation when dynamic pricing is enabled
+    const donEl = document.getElementById('donate-toggle');
+    if (donEl.checked) { donEl.checked = false; }
+  }
+  document.getElementById('dyn-fields').classList.toggle('hidden', !on);
+  document.getElementById('static-fields').classList.toggle('hidden', on);
+  showToast(on
+    ? '<i class="fa fa-chart-line mr-1"></i> Dynamic pricing on'
+    : '<i class="fa fa-lock mr-1"></i> Fixed price mode');
+}
+
+function updatePreview() {
+  const start = parseFloat(document.getElementById('f-start').value);
+  const floor = parseFloat(document.getElementById('f-floor').value);
+  const tStart = document.getElementById('f-start-time').value;
+  const tEnd   = document.getElementById('f-end-time').value;
+  const preview = document.getElementById('price-preview');
+
+  if (!start || !floor || !tStart || !tEnd || floor >= start) {
+    preview.style.display = 'none';
+    return;
+  }
+  preview.style.display = 'block';
+
+  // Compute current price based on wall-clock time
+  const now = new Date();
+  const toMin = t => { const [h,m] = t.split(':').map(Number); return h*60+m; };
+  const nowMin = now.getHours()*60 + now.getMinutes();
+  const sMin = toMin(tStart), eMin = toMin(tEnd);
+  const duration = eMin - sMin;
+  let pct = duration > 0 ? Math.min(1, Math.max(0, (nowMin - sMin) / duration)) : 0;
+  const currentPrice = Math.round(start - (start - floor) * pct);
+
+  const fmt = p => `₱${p}`;
+  const fmtTime = t => {
+    const [h,m] = t.split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    return `${h % 12 || 12}:${String(m).padStart(2,'0')} ${ampm}`;
+  };
+
+  document.getElementById('prev-start').textContent = fmt(start);
+  document.getElementById('prev-now').textContent   = `Now: ${fmt(currentPrice)}`;
+  document.getElementById('prev-floor').textContent = `Floor: ${fmt(floor)}`;
+  document.getElementById('prev-bar').style.width   = `${Math.round(pct * 100)}%`;
+  document.getElementById('prev-t-start').textContent = fmtTime(tStart);
+  document.getElementById('prev-t-end').textContent   = fmtTime(tEnd);
+}
+function toggleDonationMode(el) {
+  if (el.checked) {
+    // Turn off dynamic pricing when donation is enabled
+    const dynEl = document.getElementById('dyn-toggle');
+    if (dynEl.checked) {
+      dynEl.checked = false;
+      document.getElementById('dyn-fields').classList.add('hidden');
+      document.getElementById('static-fields').classList.remove('hidden');
+    }
+    showToast('<i class="fa fa-heart mr-1"></i> Listed as FREE donation');
+  } else {
+    showToast('Donation mode off');
+  }
+}
+function previewImage(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('img-preview').src = e.target.result;
+    document.getElementById('img-preview-wrap').classList.remove('hidden');
+    document.getElementById('img-placeholder').classList.add('hidden');
+    document.getElementById('img-upload-label').style.padding = '0';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+function clearImage(e) {
+  e.preventDefault();
+  document.getElementById('img-upload').value = '';
+  document.getElementById('img-preview').src = '';
+  document.getElementById('img-preview-wrap').classList.add('hidden');
+  document.getElementById('img-placeholder').classList.remove('hidden');
+  document.getElementById('img-upload-label').style.padding = '';
+}
+
+function selectCat(btn) {
+  btn.closest('.scroll-x').querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+initNav('seller');
+</script>
+</body>
+</html>

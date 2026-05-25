@@ -1,0 +1,278 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Analytics - FoodTrippid PH</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand:'#FF6B00',brandDark:'#CC5500',brandLight:'#FF8C3A',
+        surface:'#141414',card:'#1C1C1C',cardHover:'#242424',
+        border:'#2A2A2A',muted:'#5A5A5A',subtle:'#3A3A3A',
+        textPrimary:'#F0F0F0',textSecondary:'#9A9A9A',
+      },
+      fontFamily:{ display:['Syne','sans-serif'], body:['DM Sans','sans-serif'] }
+    }
+  }
+}
+</script>
+<link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body class="bg-surface">
+
+<div id="toast"></div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="flex items-center gap-2 mb-1">
+        <i class="fa fa-location-dot text-brand text-xs"></i>
+        <span class="text-xs text-textSecondary">Makati City</span>
+      </div>
+      <h1 class="font-display text-xl font-bold text-textPrimary leading-tight">FoodTrippid <span class="text-brand">PH</span></h1>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="sidebar-nav-link" data-page="home"><i class="fa fa-house"></i><span>Home</span></a>
+      <a href="search.html" class="sidebar-nav-link" data-page="search"><i class="fa fa-magnifying-glass"></i><span>Search</span></a>
+      <a href="map.html" class="sidebar-nav-link" data-page="map"><i class="fa fa-map-location-dot"></i><span>Map</span></a>
+      <a href="bag.html" class="sidebar-nav-link" data-page="bag">
+        <i class="fa fa-bag-shopping"></i><span>My Basket</span>
+        <span id="sidebar-bag-badge" class="sidebar-link-badge">0</span>
+      </a>
+      <a href="analytics.html" class="sidebar-nav-link" data-page="analytics"><i class="fa fa-chart-simple"></i><span>Analytics</span></a>
+      <a href="profile.html" class="sidebar-nav-link" data-page="profile"><i class="fa fa-user"></i><span>Profile</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="seller.html" style="text-decoration:none" class="btn-primary flex items-center justify-center gap-2 py-3 rounded-xl text-white text-sm font-display font-bold">
+        <i class="fa fa-store"></i> Sell Food
+      </a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <!-- HEADER -->
+    <div class="sticky-header px-5 pt-5 pb-4">
+      <div class="page-container px-0 flex items-center gap-3">
+        <a href="index.html" class="w-9 h-9 rounded-xl bg-card border border-border flex items-center justify-center text-textSecondary hover:text-brand transition-colors" style="text-decoration:none">
+          <i class="fa fa-arrow-left text-sm"></i>
+        </a>
+        <h2 class="font-display font-bold text-base text-textPrimary">
+          <i class="fa fa-chart-simple text-brand mr-1.5"></i>Waste Reduction Analytics
+        </h2>
+      </div>
+    </div>
+
+    <div class="page-container py-4">
+
+      <!-- TWO COLUMN ON DESKTOP -->
+      <div class="md-analytics-grid">
+
+        <!-- LEFT COLUMN -->
+        <div>
+          <!-- Personal Impact -->
+          <div class="bg-card rounded-2xl p-4 border border-border mb-4">
+            <p class="text-xs text-textSecondary mb-3 font-medium">
+              <i class="fa fa-user-circle text-brand mr-1"></i>Your Personal Impact
+            </p>
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div>
+                <p class="font-display font-bold text-xl text-brand">14</p>
+                <p class="text-xs text-textSecondary">meals saved</p>
+              </div>
+              <div class="border-x border-border">
+                <p class="font-display font-bold text-xl text-brand">6.2</p>
+                <p class="text-xs text-textSecondary">kg rescued</p>
+              </div>
+              <div>
+                <p class="font-display font-bold text-xl text-brand">₱830</p>
+                <p class="text-xs text-textSecondary">you saved</p>
+              </div>
+            </div>
+            <div class="mt-4 bg-green-950/30 border border-green-800/30 rounded-xl p-3 text-center">
+              <p class="text-xs text-green-400">
+                <i class="fa fa-leaf mr-1"></i>You've helped reduce <span class="font-bold">4.8 kg CO₂</span> equivalent this month!
+              </p>
+            </div>
+          </div>
+
+          <!-- Community Stats -->
+          <div class="mb-4">
+            <h3 class="font-display font-bold text-sm text-textPrimary mb-3">
+              <i class="fa fa-people-group text-brand mr-1.5"></i>Makati Community This Week
+            </h3>
+            <div class="space-y-3">
+              <div class="analytics-bar p-3 rounded-2xl">
+                <div class="flex justify-between text-xs mb-2">
+                  <span class="text-textSecondary"><i class="fa fa-bowl-food mr-1"></i>Meals Rescued</span>
+                  <span class="text-brand font-bold">2,412 / 3,000</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+              </div>
+              <div class="analytics-bar p-3 rounded-2xl">
+                <div class="flex justify-between text-xs mb-2">
+                  <span class="text-textSecondary"><i class="fa fa-weight-scale mr-1"></i>Food Weight Saved</span>
+                  <span class="text-brand font-bold">340 kg / 500 kg</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div>
+              </div>
+              <div class="analytics-bar p-3 rounded-2xl">
+                <div class="flex justify-between text-xs mb-2">
+                  <span class="text-textSecondary"><i class="fa fa-heart mr-1 text-green-400"></i>Donations Made</span>
+                  <span class="text-green-400 font-bold">87 items</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:87%;background:linear-gradient(90deg,#22c55e,#4ade80)"></div></div>
+              </div>
+              <div class="analytics-bar p-3 rounded-2xl">
+                <div class="flex justify-between text-xs mb-2">
+                  <span class="text-textSecondary"><i class="fa fa-store mr-1"></i>Active Sellers</span>
+                  <span class="text-brand font-bold">124 sellers</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
+              </div>
+              <div class="analytics-bar p-3 rounded-2xl">
+                <div class="flex justify-between text-xs mb-2">
+                  <span class="text-textSecondary"><i class="fa fa-users mr-1"></i>Families Assisted</span>
+                  <span class="text-brand font-bold">87 families</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:43%;background:linear-gradient(90deg,#818cf8,#a5b4fc)"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+          <!-- Top Categories -->
+          <div class="mb-4">
+            <h3 class="font-display font-bold text-sm text-textPrimary mb-3">
+              <i class="fa fa-ranking-star text-brand mr-1.5"></i>Top Categories Rescued
+            </h3>
+            <div class="space-y-3">
+              <div class="bg-card rounded-2xl p-3 border border-border flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-brand/20 flex items-center justify-center flex-none">
+                  <i class="fa fa-fire-flame-curved text-brand text-sm"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-textSecondary">Karinderya</span>
+                    <span class="text-textPrimary font-medium">38%</span>
+                  </div>
+                  <div class="progress-bar"><div class="progress-fill" style="width:38%"></div></div>
+                </div>
+              </div>
+              <div class="bg-card rounded-2xl p-3 border border-border flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-brand/20 flex items-center justify-center flex-none">
+                  <i class="fa fa-bread-slice text-brand text-sm"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-textSecondary">Bakery</span>
+                    <span class="text-textPrimary font-medium">27%</span>
+                  </div>
+                  <div class="progress-bar"><div class="progress-fill" style="width:27%"></div></div>
+                </div>
+              </div>
+              <div class="bg-card rounded-2xl p-3 border border-border flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-brand/20 flex items-center justify-center flex-none">
+                  <i class="fa fa-cart-shopping text-brand text-sm"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-textSecondary">Supermarket</span>
+                    <span class="text-textPrimary font-medium">20%</span>
+                  </div>
+                  <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+                </div>
+              </div>
+              <div class="bg-card rounded-2xl p-3 border border-border flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-brand/20 flex items-center justify-center flex-none">
+                  <i class="fa fa-utensils text-brand text-sm"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-textSecondary">Restaurant</span>
+                    <span class="text-textPrimary font-medium">15%</span>
+                  </div>
+                  <div class="progress-bar"><div class="progress-fill" style="width:15%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SDG Progress -->
+          <div class="mb-4 bg-card rounded-2xl p-4 border border-border">
+            <p class="font-display font-bold text-sm text-textPrimary mb-3">
+              <i class="fa fa-globe text-brand mr-1.5"></i>SDG Progress
+            </p>
+            <div class="space-y-3">
+              <div class="bg-red-900/20 border border-red-800/30 rounded-xl p-3 flex items-start gap-3">
+                <div class="w-7 h-7 rounded-lg bg-red-800 text-white text-xs flex items-center justify-center font-bold flex-none">1</div>
+                <div>
+                  <p class="text-xs text-textPrimary font-medium">No Poverty</p>
+                  <p class="text-xs text-green-400 mt-0.5">
+                    <i class="fa fa-check-circle mr-1"></i>87 families assisted this week
+                  </p>
+                </div>
+              </div>
+              <div class="bg-orange-900/20 border border-orange-800/30 rounded-xl p-3 flex items-start gap-3">
+                <div class="w-7 h-7 rounded-lg bg-orange-800 text-white text-xs flex items-center justify-center font-bold flex-none">8</div>
+                <div>
+                  <p class="text-xs text-textPrimary font-medium">Decent Work &amp; Economic Growth</p>
+                  <p class="text-xs text-green-400 mt-0.5">
+                    <i class="fa fa-check-circle mr-1"></i>124 small sellers earning from surplus
+                  </p>
+                </div>
+              </div>
+              <div class="bg-yellow-900/20 border border-yellow-800/30 rounded-xl p-3 flex items-start gap-3">
+                <div class="w-7 h-7 rounded-lg bg-yellow-700 text-white text-xs flex items-center justify-center font-bold flex-none">12</div>
+                <div>
+                  <p class="text-xs text-textPrimary font-medium">Responsible Consumption</p>
+                  <p class="text-xs text-green-400 mt-0.5">
+                    <i class="fa fa-check-circle mr-1"></i>340 kg food waste prevented
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end md-analytics-grid -->
+    </div>
+  </main>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item" data-page="home" onclick="location.href='index.html'">
+    <i class="nav-icon fa fa-house"></i><span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="search" onclick="location.href='search.html'">
+    <i class="nav-icon fa fa-magnifying-glass"></i><span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="map" onclick="location.href='map.html'">
+    <i class="nav-icon fa fa-map"></i><span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="bag" onclick="location.href='bag.html'" style="position:relative">
+    <i class="nav-icon fa fa-bag-shopping"></i>
+    <span id="nav-bag-badge" class="nav-badge">0</span>
+    <span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="analytics" onclick="location.href='analytics.html'">
+    <i class="nav-icon fa fa-chart-simple"></i><span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="profile" onclick="location.href='profile.html'">
+    <i class="nav-icon fa fa-user"></i><span class="nav-dot"></span>
+  </button>
+</nav>
+
+<script src="js/app.js"></script>
+<script>initNav('analytics');</script>
+</body>
+</html>

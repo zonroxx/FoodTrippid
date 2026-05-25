@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Search - FoodTrippid PH</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand:'#FF6B00',brandDark:'#CC5500',brandLight:'#FF8C3A',
+        surface:'#141414',card:'#1C1C1C',cardHover:'#242424',
+        border:'#2A2A2A',muted:'#5A5A5A',subtle:'#3A3A3A',
+        textPrimary:'#F0F0F0',textSecondary:'#9A9A9A',
+      },
+      fontFamily:{ display:['Syne','sans-serif'], body:['DM Sans','sans-serif'] }
+    }
+  }
+}
+</script>
+<link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body class="bg-surface">
+
+<div id="toast"></div>
+
+<!-- PRODUCT MODAL -->
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal-content">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-display text-lg font-bold text-textPrimary" id="modal-title">Product</h3>
+      <button onclick="closeModalBtn()" class="w-8 h-8 rounded-full bg-subtle flex items-center justify-center text-textSecondary hover:text-brand transition-colors">
+        <i class="fa fa-xmark text-sm"></i>
+      </button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="flex items-center gap-2 mb-1">
+        <i class="fa fa-location-dot text-brand text-xs"></i>
+        <span class="text-xs text-textSecondary">Manila City</span>
+      </div>
+      <h1 class="font-display text-xl font-bold text-textPrimary leading-tight">FoodTrippid <span class="text-brand">PH</span></h1>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="sidebar-nav-link" data-page="home"><i class="fa fa-house"></i><span>Home</span></a>
+      <a href="search.html" class="sidebar-nav-link" data-page="search"><i class="fa fa-magnifying-glass"></i><span>Search</span></a>
+      <a href="map.html" class="sidebar-nav-link" data-page="map"><i class="fa fa-map-location-dot"></i><span>Map</span></a>
+      <a href="bag.html" class="sidebar-nav-link" data-page="bag">
+        <i class="fa fa-bag-shopping"></i><span>My Basket</span>
+        <span id="sidebar-bag-badge" class="sidebar-link-badge">0</span>
+      </a>
+      <a href="profile.html" class="sidebar-nav-link" data-page="profile"><i class="fa fa-user"></i><span>Profile</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="seller.html" style="text-decoration:none" class="btn-primary flex items-center justify-center gap-2 py-3 rounded-xl text-white text-sm font-display font-bold">
+        <i class="fa fa-store"></i> Sell Food
+      </a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <!-- STICKY HEADER -->
+    <div class="sticky-header px-5 pt-5 pb-3">
+      <div class="page-container px-0">
+        <div class="flex items-center gap-3 mb-3">
+          <a href="index.html" class="w-9 h-9 rounded-xl bg-card border border-border flex items-center justify-center text-textSecondary hover:text-brand transition-colors" style="text-decoration:none">
+            <i class="fa fa-arrow-left text-sm"></i>
+          </a>
+          <div class="relative flex-1">
+            <i class="fa fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-muted text-sm" style="z-index:1"></i>
+            <input type="search" id="search-input" placeholder="Search food, seller, category..."
+              class="w-full rounded-2xl pl-10 pr-4 py-3 text-sm border" oninput="handleSearch(this.value)" autofocus/>
+            <div id="search-suggestions" class="hidden"></div>
+          </div>
+        </div>
+        <!-- Filter Chips -->
+        <div class="flex gap-2 pb-1">
+          <button class="filter-chip active" onclick="toggleFilter(this)">
+            <i class="fa fa-border-all mr-1"></i>All
+          </button>
+          <button class="filter-chip" onclick="toggleFilter(this)">
+            <i class="fa fa-location-crosshairs mr-1"></i>Near Me
+          </button>
+          <button class="filter-chip" onclick="toggleFilter(this)">
+            <i class="fa fa-heart mr-1"></i>Free / Donation
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-container py-4">
+      <!-- Results -->
+      <div>
+        <p class="text-xs text-textSecondary font-medium mb-3" id="results-label">
+          <i class="fa fa-list mr-1"></i>All Listings (18)
+        </p>
+        <div class="space-y-3 list-md-grid-2" id="search-results">
+          <div class="food-card bg-card rounded-2xl p-3 border border-border flex gap-3 cursor-pointer"
+            onclick="openModal('Bicol Express (2 servings)','Manong Eddie\'s','₱55','₱110','karinderya','Today 8PM','Karinderya Special','img-food-1','Spicy and creamy Bicol Express, excess from today\'s serving. Pairs great with rice.','1.8 km away','<i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star-half-stroke\'></i> 4.3')">
+            <img src="images/placeholderFood.png" class="w-16 h-16 rounded-xl flex-none object-cover" alt="food">
+            <div class="flex-1">
+              <p class="font-display font-bold text-sm text-textPrimary">Bicol Express (2 servings)</p>
+              <p class="text-xs text-textSecondary"><i class="fa fa-store mr-1"></i>Manong Eddie's · <i class="fa fa-location-dot ml-1 mr-0.5"></i>1.8 km</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="tag-expiry text-xs px-1.5 py-0.5 rounded-full"><i class="fa fa-clock mr-1"></i>Today 8PM</span>
+              </div>
+              <div class="flex items-center justify-between mt-1.5">
+                <div><span class="text-brand font-bold text-sm">₱55</span><span class="price-original text-xs ml-1.5">₱110</span></div>
+                <button class="btn-primary text-white text-xs px-3 py-1.5 rounded-xl font-medium"
+                  data-name="Bicol Express (2 servings)" data-price="₱55" data-seller="Manong Eddie's"
+                  onclick="addToBag(event)"><i class="fa fa-plus mr-1"></i>Add</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="food-card bg-card rounded-2xl p-3 border border-border flex gap-3 cursor-pointer"
+            onclick="openModal('Ensaymada (6 pcs)','La Bella Panaderia','₱70','₱180','bakery','Tomorrow 6AM','Bakery Surplus','img-food-4','Rich, buttery ensaymada with cheese topping. Surplus evening batch, best before tomorrow morning.','0.9 km away','<i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i> 4.9')">
+            <img src="images/placeholderFood.png" class="w-16 h-16 rounded-xl flex-none object-cover" alt="food">
+            <div class="flex-1">
+              <p class="font-display font-bold text-sm text-textPrimary">Ensaymada (6 pcs)</p>
+              <p class="text-xs text-textSecondary"><i class="fa fa-store mr-1"></i>La Bella Panaderia · <i class="fa fa-location-dot ml-1 mr-0.5"></i>0.9 km</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="tag-expiry text-xs px-1.5 py-0.5 rounded-full"><i class="fa fa-clock mr-1"></i>Tomorrow 6AM</span>
+              </div>
+              <div class="flex items-center justify-between mt-1.5">
+                <div><span class="text-brand font-bold text-sm">₱70</span><span class="price-original text-xs ml-1.5">₱180</span></div>
+                <button class="btn-primary text-white text-xs px-3 py-1.5 rounded-xl font-medium"
+                  data-name="Ensaymada (6 pcs)" data-price="₱70" data-seller="La Bella Panaderia"
+                  onclick="addToBag(event)"><i class="fa fa-plus mr-1"></i>Add</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="food-card bg-card rounded-2xl p-3 border border-border flex gap-3 cursor-pointer"
+            onclick="openModal('Mixed Vegetable Box 1kg','SM Supermarket Makati','₱35','₱85','supermarket','May 28','Supermarket Clearance','img-food-2','Mixed seasonal vegetables, nearing best-before date. Great for sinigang, tinola, or stir fry.','4.0 km away','<i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star-half-stroke\'></i> 3.9')">
+            <img src="images/placeholderFood.png" class="w-16 h-16 rounded-xl flex-none object-cover" alt="food">
+            <div class="flex-1">
+              <p class="font-display font-bold text-sm text-textPrimary">Mixed Vegetable Box 1kg</p>
+              <p class="text-xs text-textSecondary"><i class="fa fa-store mr-1"></i>SM Supermarket Makati · <i class="fa fa-location-dot ml-1 mr-0.5"></i>4.0 km</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="tag-expiry text-xs px-1.5 py-0.5 rounded-full"><i class="fa fa-clock mr-1"></i>Exp: May 28</span>
+              </div>
+              <div class="flex items-center justify-between mt-1.5">
+                <div><span class="text-brand font-bold text-sm">₱35</span><span class="price-original text-xs ml-1.5">₱85</span></div>
+                <button class="btn-primary text-white text-xs px-3 py-1.5 rounded-xl font-medium"
+                  data-name="Mixed Vegetable Box 1kg" data-price="₱35" data-seller="SM Supermarket Makati"
+                  onclick="addToBag(event)"><i class="fa fa-plus mr-1"></i>Add</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="food-card bg-card rounded-2xl p-3 border border-green-900/30 flex gap-3 cursor-pointer"
+            onclick="openModal('Banana Bread Loaf','Home Baker Trisha','FREE','₱150','donation','Today 9PM','Donation','img-food-5','Homemade banana bread, extra loaf from today\'s bake. Completely free for whoever needs it.','1.5 km away','<i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i> 5.0')">
+            <img src="images/placeholderFood.png" class="w-16 h-16 rounded-xl flex-none object-cover" alt="food">
+            <div class="flex-1">
+              <p class="font-display font-bold text-sm text-textPrimary">Banana Bread Loaf</p>
+              <p class="text-xs text-textSecondary"><i class="fa fa-store mr-1"></i>Home Baker Trisha · <i class="fa fa-location-dot ml-1 mr-0.5"></i>1.5 km</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="tag-free text-xs px-1.5 py-0.5 rounded-full"><i class="fa fa-heart mr-1"></i>FREE</span>
+              </div>
+              <div class="mt-1.5"><span class="text-green-400 font-bold text-sm">FREE</span></div>
+            </div>
+          </div>
+
+          <div class="food-card bg-card rounded-2xl p-3 border border-border flex gap-3 cursor-pointer"
+            onclick="openModal('Kare-Kare w/ Bagoong','Lutong Bahay ni Nelia','₱95','₱160','homemade','Today 7PM','Home-cooked','img-food-6','Rich oxtail kare-kare with homemade bagoong. Nelia\'s special, leftover from family celebration.','2.7 km away','<i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star-half-stroke\'></i> 4.6')">
+            <img src="images/placeholderFood.png" class="w-16 h-16 rounded-xl flex-none object-cover" alt="food">
+            <div class="flex-1">
+              <p class="font-display font-bold text-sm text-textPrimary">Kare-Kare w/ Bagoong</p>
+              <p class="text-xs text-textSecondary"><i class="fa fa-store mr-1"></i>Lutong Bahay ni Nelia · <i class="fa fa-location-dot ml-1 mr-0.5"></i>2.7 km</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="tag-expiry text-xs px-1.5 py-0.5 rounded-full"><i class="fa fa-clock mr-1"></i>Today 7PM</span>
+              </div>
+              <div class="flex items-center justify-between mt-1.5">
+                <div><span class="text-brand font-bold text-sm">₱95</span><span class="price-original text-xs ml-1.5">₱160</span></div>
+                <button class="btn-primary text-white text-xs px-3 py-1.5 rounded-xl font-medium"
+                  data-name="Kare-Kare w/ Bagoong" data-price="₱95" data-seller="Lutong Bahay ni Nelia"
+                  onclick="addToBag(event)"><i class="fa fa-plus mr-1"></i>Add</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="food-card bg-card rounded-2xl p-3 border border-border flex gap-3 cursor-pointer"
+            onclick="openModal('Pancit Bihon (3 servings)','Tita Lorna\'s Catering','₱80','₱150','homemade','Today 8PM','Home-cooked','img-food-3','Freshly made pancit bihon with pork and vegetables. Extra serving from today\'s event.','1.1 km away','<i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i><i class=\'fa fa-star-half-stroke\'></i> 4.5')">
+            <img src="images/placeholderFood.png" class="w-16 h-16 rounded-xl flex-none object-cover" alt="food">
+            <div class="flex-1">
+              <p class="font-display font-bold text-sm text-textPrimary">Pancit Bihon (3 servings)</p>
+              <p class="text-xs text-textSecondary"><i class="fa fa-store mr-1"></i>Tita Lorna's Catering · <i class="fa fa-location-dot ml-1 mr-0.5"></i>1.1 km</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="tag-expiry text-xs px-1.5 py-0.5 rounded-full"><i class="fa fa-clock mr-1"></i>Today 8PM</span>
+              </div>
+              <div class="flex items-center justify-between mt-1.5">
+                <div><span class="text-brand font-bold text-sm">₱80</span><span class="price-original text-xs ml-1.5">₱150</span></div>
+                <button class="btn-primary text-white text-xs px-3 py-1.5 rounded-xl font-medium"
+                  data-name="Pancit Bihon (3 servings)" data-price="₱80" data-seller="Tita Lorna's Catering"
+                  onclick="addToBag(event)"><i class="fa fa-plus mr-1"></i>Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item" data-page="home" onclick="location.href='index.html'">
+    <i class="nav-icon fa fa-house"></i><span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="search" onclick="location.href='search.html'">
+    <i class="nav-icon fa fa-magnifying-glass"></i><span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="map" onclick="location.href='map.html'">
+    <i class="nav-icon fa fa-map"></i><span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="bag" onclick="location.href='bag.html'" style="position:relative">
+    <i class="nav-icon fa fa-bag-shopping"></i>
+    <span id="nav-bag-badge" class="nav-badge">0</span>
+    <span class="nav-dot"></span>
+  </button>
+  <button class="nav-item" data-page="profile" onclick="location.href='profile.html'">
+    <i class="nav-icon fa fa-user"></i><span class="nav-dot"></span>
+  </button>
+</nav>
+
+<script src="js/app.js"></script>
+<script>
+const suggestions = ['Lechon Kawali','Sinigang','Pandesal','Adobo','Bicol Express','Kare-Kare','BBQ Pork','Ensaymada','Banana Bread','Mixed Vegetables','Yakult','Chicken Pastil','Rice Meal','Tinapay Box'];
+
+function handleSearch(val) {
+  const box = document.getElementById('search-suggestions');
+  const label = document.getElementById('results-label');
+  if (!val.trim()) {
+    box.classList.add('hidden');
+    label.innerHTML = '<i class="fa fa-list mr-1"></i>All Listings (18)';
+    return;
+  }
+  const matches = suggestions.filter(s => s.toLowerCase().includes(val.toLowerCase()));
+  if (matches.length === 0) { box.classList.add('hidden'); return; }
+  box.classList.remove('hidden');
+  box.innerHTML = matches.slice(0,5).map(m =>
+    `<div class="px-4 py-3 text-sm text-textPrimary hover:bg-subtle cursor-pointer border-b border-border last:border-0 flex items-center gap-3" onclick="setSearch('${m}')">
+      <i class="fa fa-search text-muted text-xs"></i>${m}
+    </div>`
+  ).join('');
+  label.innerHTML = `<i class="fa fa-list mr-1"></i>Results for "${val}" (${Math.floor(Math.random()*8)+2})`;
+}
+
+
+initNav('search');
+</script>
+</body>
+</html>
